@@ -22,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors['email'] = "Please enter a valid email address.";
     }
 
-    if (!preg_match("/^0[1-8][0-9]{8}$/", $phone)) {
-        $errors['email'] = "Please enter a valid South African phone number.";
+    if (!preg_match('/^((\+27|0|27)[1-8][0-9]{8})$/', $phone)) {
+        $errors['phone'] = "Please enter a valid South African phone number.";
     }
 
     if (count($errors) === 0) {
@@ -43,12 +43,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: index.php");
             exit();
         }
+
     } else {
         $_SESSION['errors'] = $errors;
         $_SESSION['formData'] = $_POST;
         header("Location: index.php");
         exit();
     }
+
 } else {
     header("Location: index.php");
     exit();
