@@ -22,7 +22,7 @@ unset($_SESSION['errors'], $_SESSION['formData'], $_SESSION['success']);
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
-            <input type="text" class="form-control <?php echo isset($errors['phone']) ? 'is-invalid' : ''; ?>" id="phone" name="phone" pattern="0[1-8][0-9]{8}" value="<?php echo htmlspecialchars($formData['phone'] ?? '', ENT_QUOTES); ?>" required>
+            <input type="text" class="form-control <?php echo isset($errors['phone']) ? 'is-invalid' : ''; ?>" id="phone" name="phone" pattern="^((\+27|0|27)[1-8][0-9]{8})$" value="<?php echo htmlspecialchars($formData['phone'] ?? '', ENT_QUOTES); ?>" required>
             <div class="invalid-feedback"><?php echo $errors['phone'] ?? 'Please enter a valid South African phone number.'; ?></div>
         </div>
         <div class="form-group">
