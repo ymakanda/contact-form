@@ -1,33 +1,25 @@
 <?php
 
 session_start();
-$success = $_SESSION['success'] ?? '';
 
 require 'config/database.php';
+
+$success = $_SESSION['success'] ?? '';
 
 $limit = 5;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-$dsn = DB_DRIVER .':host='. DB_HOST. ';dbname='.DB_NAME;
+$stmt = $pdo->prepare("SELECT id, name, email, phone, message, created_at FROM contacts ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-try {
-    $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$totalStmt = $pdo->query("SELECT COUNT(*) FROM contacts");
+$totalEntries = $totalStmt->fetchColumn();
+$totalPages = ceil($totalEntries / $limit);
 
-    $stmt = $pdo->prepare("SELECT id, name, email, phone, message, created_at FROM contacts ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
-    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-    $stmt->execute();
-    $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $totalStmt = $pdo->query("SELECT COUNT(*) FROM contacts");
-    $totalEntries = $totalStmt->fetchColumn();
-    $totalPages = ceil($totalEntries / $limit);
-
-} catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-}
 ?>
 
 <?php include 'includes/header.php'; ?>

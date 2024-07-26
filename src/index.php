@@ -1,11 +1,18 @@
 <?php
 session_start();
+
 $errors = $_SESSION['errors'] ?? [];
 $formData = $_SESSION['formData'] ?? [];
 $success = $_SESSION['success'] ?? '';
-unset($_SESSION['errors'], $_SESSION['formData'], $_SESSION['success']);
+$dbErrors = $_SESSION['dbErrors'] ?? '';
+unset($_SESSION['errors'], $_SESSION['formData'], $_SESSION['success'], $_SESSION['dbErrors']);
 ?>
+
 <?php include 'includes/header.php'; ?>
+
+<?php if ($dbErrors): ?>
+    <div class="alert alert-danger"><?php echo $dbErrors; ?></div>
+<?php endif; ?>
 
     <h2>Contact Us</h2>
     <form id="contactForm" action="save_contact.php" method="POST" class="needs-validation" novalidate>
